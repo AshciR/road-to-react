@@ -1,4 +1,8 @@
-# Getting Started with Create React App
+# Road to React
+This repository is my efforts to learn React using the book Road to React by Robin Wieruch
+You can find the book [here](https://www.roadtoreact.com/)
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
