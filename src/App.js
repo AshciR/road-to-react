@@ -16,17 +16,21 @@ function App() {
 
       <hr />
 
-      {fruits.map(it => <div key={it.id}>
-        <span>Id: {it.id} </span>
-        <span>
-          <a href={it.url} >{it.name} </a>
-        </span>
-        <span>Calories: {it.calories} </span>
-      </div>)
-      }
-
+      <List />
     </div>
   );
+}
+
+function List() {
+  return fruits.map(it =>
+    <div key={it.id}>
+      <span>Id: {it.id} </span>
+      <span>
+        <a href={it.url} >{it.name} </a>
+      </span>
+      <span>Calories: {it.calories} </span>
+    </div>
+  )
 }
 
 export default App;
