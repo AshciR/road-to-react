@@ -6,23 +6,21 @@ const fruits = [
   { id: 3, name: 'Cherry', calories: 300, url: 'https://en.wikipedia.org/wiki/Cherry' }
 ];
 
-function App() {
-  return (
-    <div>
-      <h1>My Favorite Fruits</h1>
+const App = () => (
+  <div>
+    <h1>My Favorite Fruits</h1>
 
-      <label htmlFor="search" >Search: </label>
-      <input id="search" type="text" />
+    <label htmlFor="search" >Search: </label>
+    <input id="search" type="text" />
 
-      <hr />
+    <hr />
 
-      <List />
-    </div>
-  );
-}
+    <List />
+  </div>
+);
 
-function List() {
-  return fruits.map(it =>
+const List = () =>
+  fruits.map(it =>
     <div key={it.id}>
       <span>Id: {it.id} </span>
       <span>
@@ -30,7 +28,6 @@ function List() {
       </span>
       <span>Calories: {it.calories} </span>
     </div>
-  )
-}
+  );
 
 export default App;
