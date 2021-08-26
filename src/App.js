@@ -6,18 +6,25 @@ const fruits = [
   { id: 3, name: 'Cherry', calories: 300, url: 'https://en.wikipedia.org/wiki/Cherry' }
 ];
 
-const App = () => (
-  <div>
-    <h1>My Favorite Fruits</h1>
+const App = () => {
 
-    <label htmlFor="search" >Search: </label>
-    <input id="search" type="text" />
+  const handleChange = event => {
+    console.log(event.target.value);
+  };
 
-    <hr />
+  return (
+    <div>
+      <h1>My Favorite Fruits</h1>
 
-    <List />
-  </div>
-);
+      <label htmlFor="search" >Search: </label>
+      <input id="search" type="text" onChange={handleChange}/>
+
+      <hr />
+
+      <List />
+    </div>
+  );
+};
 
 const List = () =>
   fruits.map(it =>
