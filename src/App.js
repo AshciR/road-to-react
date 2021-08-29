@@ -3,28 +3,19 @@ import React from 'react';
 
 const App = () => {
 
-  const [searchTerm, setSearchTerm] = React.useState('');
-
   const fruits = [
     { id: 1, name: 'Apple', calories: 100, url: 'https://en.wikipedia.org/wiki/Apple' },
     { id: 2, name: 'Bananas', calories: 200, url: 'https://en.wikipedia.org/wiki/Banana' },
     { id: 3, name: 'Cherry', calories: 300, url: 'https://en.wikipedia.org/wiki/Cherry' }
   ];
 
-  const handleChange = event => {
-    setSearchTerm(event.target.value);
-  };
+  const handleSearch = event => console.log(event.target.value);
 
   return (
     <div>
       <h1>My Favorite Fruits</h1>
 
-      <label htmlFor="search" >Search: </label>
-      <input id="search" type="text" onChange={handleChange} />
-
-      <p>
-        Searching for <strong>{searchTerm}</strong>
-      </p>
+      <Search onSearch={handleSearch} />
 
       <hr />
 
@@ -43,5 +34,27 @@ const List = props =>
       <span>Calories: {it.calories} </span>
     </div>
   );
+
+const Search = props => {
+
+  const [searchTerm, setSearchTerm] = React.useState('What do you want to search for?');
+
+  const handleChange = event => {
+    setSearchTerm(event.target.value);
+    props.onSearch(event);
+  };
+
+  return (
+    <div>
+      <label htmlFor="search" >Search: </label>
+      <input id="search" type="text" onChange={handleChange} />
+
+      <p>
+        Searching for <strong>{searchTerm}</strong>
+      </p>
+    </div>
+  );
+
+};
 
 export default App;
