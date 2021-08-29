@@ -1,12 +1,12 @@
 import './App.css';
 
-const fruits = [
-  { id: 1, name: 'Apple', calories: 100, url: 'https://en.wikipedia.org/wiki/Apple' },
-  { id: 2, name: 'Bananas', calories: 200, url: 'https://en.wikipedia.org/wiki/Banana' },
-  { id: 3, name: 'Cherry', calories: 300, url: 'https://en.wikipedia.org/wiki/Cherry' }
-];
-
 const App = () => {
+
+  const fruits = [
+    { id: 1, name: 'Apple', calories: 100, url: 'https://en.wikipedia.org/wiki/Apple' },
+    { id: 2, name: 'Bananas', calories: 200, url: 'https://en.wikipedia.org/wiki/Banana' },
+    { id: 3, name: 'Cherry', calories: 300, url: 'https://en.wikipedia.org/wiki/Cherry' }
+  ];
 
   const handleChange = event => {
     console.log(event.target.value);
@@ -21,13 +21,13 @@ const App = () => {
 
       <hr />
 
-      <List />
+      <List list={fruits} />
     </div>
   );
 };
 
-const List = () =>
-  fruits.map(it =>
+const List = props =>
+  props.list.map(it =>
     <div key={it.id}>
       <span>Id: {it.id} </span>
       <span>
