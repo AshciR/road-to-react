@@ -9,17 +9,25 @@ const App = () => {
     { id: 3, name: 'Cherry', calories: 300, url: 'https://en.wikipedia.org/wiki/Cherry' }
   ];
 
-  const handleSearch = event => console.log(event.target.value);
+  const [searchTerm, setSearchTerm] = React.useState('What do you want to search for?');
+
+  const handleSearch = event => {
+    setSearchTerm(event.target.value);
+  }
+
+  const filteredSearch = fruits.filter(fruit =>
+    fruit.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div>
       <h1>My Favorite Fruits</h1>
 
-      <Search onSearch={handleSearch} />
+      <Search onSearch={handleSearch} searchTerm={searchTerm} />
 
       <hr />
 
-      <List list={fruits} />
+      <List list={filteredSearch} />
     </div>
   );
 };
@@ -37,20 +45,13 @@ const List = props =>
 
 const Search = props => {
 
-  const [searchTerm, setSearchTerm] = React.useState('What do you want to search for?');
-
-  const handleChange = event => {
-    setSearchTerm(event.target.value);
-    props.onSearch(event);
-  };
-
   return (
     <div>
       <label htmlFor="search" >Search: </label>
-      <input id="search" type="text" onChange={handleChange} />
+      <input id="search" type="text" onChange={props.onSearch} />
 
       <p>
-        Searching for <strong>{searchTerm}</strong>
+        Searching for <strong>{props.searchTerm}</strong>
       </p>
     </div>
   );
