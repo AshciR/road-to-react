@@ -9,7 +9,13 @@ const App = () => {
     { id: 3, name: 'Cherry', calories: 300, url: 'https://en.wikipedia.org/wiki/Cherry' }
   ];
 
-  const [searchTerm, setSearchTerm] = React.useState('Search For Fruit');
+  const [searchTerm, setSearchTerm] = React.useState(
+    localStorage.getItem('search') || 'Search For Fruit'
+  );
+
+  React.useEffect(() => {
+    localStorage.setItem('search', searchTerm);
+  }, [searchTerm]);
 
   const handleSearch = event => {
     setSearchTerm(event.target.value);
