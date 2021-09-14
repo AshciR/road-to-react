@@ -15,17 +15,23 @@ const useSemiPersistentState = (key, initialState) => {
 
 const App = () => {
 
-  const fruits = [
+  const initialFruits = [
     { id: 1, name: 'Apple', calories: 100, url: 'https://en.wikipedia.org/wiki/Apple' },
     { id: 2, name: 'Bananas', calories: 200, url: 'https://en.wikipedia.org/wiki/Banana' },
     { id: 3, name: 'Cherry', calories: 300, url: 'https://en.wikipedia.org/wiki/Cherry' }
   ];
 
   const [searchTerm, setSearchTerm] = useSemiPersistentState('search', 'Fruit to search for');
+  const [fruits, setFruits] = React.useState(initialFruits)
+
+  const handleRemoveFruit = item => {
+    const newFruits = fruits.filter(fruit => fruit.id !== item.id);
+    setFruits(newFruits);
+  };
 
   const handleSearch = event => {
-    setSearchTerm(event.target.value);
-  }
+    setSearchTerm(event.target.value)
+  };
 
   const filteredSearch = fruits.filter(fruit =>
     fruit.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -40,29 +46,39 @@ const App = () => {
         value={searchTerm}
         onInputChange={handleSearch}
       >
-        <strong>Search:</strong> 
+        <strong>Search:</strong>
       </InputWithALabel>
-      
+
       <hr />
 
-      <List list={filteredSearch} />
+      <List list={filteredSearch} onRemoveItem={handleRemoveFruit} />
     </div>
   );
 };
 
-const List = ({ list }) => list.map(item =>
-  <Item key={item.id} item={item} />
+const List = ({ list, onRemoveItem }) => list.map(item =>
+  <Item
+    key={item.id}
+    item={item}
+    onRemoveItem={onRemoveItem}
+  />
 );
 
-const Item = ({ item }) => (
+const Item = ({ item, onRemoveItem }) => (
   <div>
     <span>Id: {item.id} </span>
     <span>
       <a href={item.url}> {item.name} </a>
     </span>
     <span>Calories: {item.calories} </span>
+    <span>
+      <button type="button" onClick={() => onRemoveItem(item)}>
+        Remove
+      </button>
+    </span>
   </div>
 );
+
 
 const InputWithALabel = ({ id, children, type = "text", value, onInputChange }) => (
 
