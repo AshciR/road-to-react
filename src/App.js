@@ -21,8 +21,21 @@ const App = () => {
     { id: 3, name: 'Cherry', calories: 300, url: 'https://en.wikipedia.org/wiki/Cherry' }
   ];
 
-  const [searchTerm, setSearchTerm] = useSemiPersistentState('search', 'Fruit to search for');
-  const [fruits, setFruits] = React.useState(initialFruits)
+  const getAsyncStories = () =>
+    new Promise(resolve =>
+      setTimeout(
+        () => resolve({ data: { fruits: initialFruits } }), 2000  
+      )
+    );
+
+  const [searchTerm, setSearchTerm] = useSemiPersistentState('search', '');
+  const [fruits, setFruits] = React.useState([]);
+
+  React.useEffect(() => {
+    getAsyncStories().then(result => {
+      setFruits(result.data.fruits);
+    });
+  }, []);
 
   const handleRemoveFruit = item => {
     const newFruits = fruits.filter(fruit => fruit.id !== item.id);
