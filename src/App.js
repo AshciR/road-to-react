@@ -24,17 +24,24 @@ const App = () => {
   const getAsyncStories = () =>
     new Promise(resolve =>
       setTimeout(
-        () => resolve({ data: { fruits: initialFruits } }), 2000  
+        () => resolve({ data: { fruits: initialFruits } }), 2000
       )
     );
 
   const [searchTerm, setSearchTerm] = useSemiPersistentState('search', '');
   const [fruits, setFruits] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [isError, setIsError] = React.useState(false);
 
   React.useEffect(() => {
-    getAsyncStories().then(result => {
-      setFruits(result.data.fruits);
-    });
+    setIsLoading(true);
+
+    getAsyncStories()
+      .then(result => {
+        setFruits(result.data.fruits);
+        setIsLoading(false);
+      })
+      .catch(() => setIsError(true));
   }, []);
 
   const handleRemoveFruit = item => {
@@ -64,7 +71,17 @@ const App = () => {
 
       <hr />
 
-      <List list={filteredSearch} onRemoveItem={handleRemoveFruit} />
+      {isError && <p>Something went wrong ...</p>}
+
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <List
+          list={filteredSearch}
+          onRemoveItem={handleRemoveFruit}
+        />
+      )}
+
     </div>
   );
 };
