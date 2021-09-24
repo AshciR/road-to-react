@@ -1,5 +1,5 @@
-import './App.css';
 import React from 'react';
+import './App.css';
 
 const useSemiPersistentState = (key, initialState) => {
   const [value, setValue] = React.useState(
@@ -11,6 +11,17 @@ const useSemiPersistentState = (key, initialState) => {
   }, [value, key]);
 
   return [value, setValue];
+};
+
+const fruitsReducer = (state, action) => {
+  switch (action.type) {
+    case 'SET_FRUITS':
+      return action.payload;
+    case 'REMOVE_FRUIT':
+      return state.filter(fruit => action.payload.id !== fruit.id);
+    default:
+      throw new Error();
+  }
 };
 
 const App = () => {
@@ -29,7 +40,7 @@ const App = () => {
     );
 
   const [searchTerm, setSearchTerm] = useSemiPersistentState('search', '');
-  const [fruits, setFruits] = React.useState([]);
+  const [fruits, dispatchFruits] = React.useReducer(fruitsReducer, []);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
 
@@ -38,15 +49,20 @@ const App = () => {
 
     getAsyncStories()
       .then(result => {
-        setFruits(result.data.fruits);
+        dispatchFruits({
+          type: 'SET_FRUITS',
+          payload: result.data.fruits
+        });
         setIsLoading(false);
       })
       .catch(() => setIsError(true));
   }, []);
 
   const handleRemoveFruit = item => {
-    const newFruits = fruits.filter(fruit => fruit.id !== item.id);
-    setFruits(newFruits);
+    dispatchFruits({
+      type: 'REMOVE_FRUIT',
+      payload: item
+    });
   };
 
   const handleSearch = event => {
