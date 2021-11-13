@@ -15,10 +15,30 @@ const useSemiPersistentState = (key, initialState) => {
 
 const fruitsReducer = (state, action) => {
   switch (action.type) {
-    case 'SET_FRUITS':
-      return action.payload;
+    case 'FRUITS_FETCH_INIT':
+      return {
+        ...state,
+        isLoading: true,
+        isError: false
+      };
+    case 'FRUITS_FETCH_SUCCESS':
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        data: action.payload
+      };
+    case 'FRUITS_FETCH_FAILURE':
+      return {
+        ...state,
+        isLoading: false,
+        isError: true
+      };
     case 'REMOVE_FRUIT':
-      return state.filter(fruit => action.payload.id !== fruit.id);
+      return {
+        ...state,
+        data: state.data.filter(fruit => action.payload.id !== fruit.id)
+      };
     default:
       throw new Error();
   }
@@ -40,22 +60,24 @@ const App = () => {
     );
 
   const [searchTerm, setSearchTerm] = useSemiPersistentState('search', '');
-  const [fruits, dispatchFruits] = React.useReducer(fruitsReducer, []);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [isError, setIsError] = React.useState(false);
+  const [fruits, dispatchFruits] = React.useReducer(
+    fruitsReducer,
+    { data: [], isLoading: false, isError: false }
+  );
 
   React.useEffect(() => {
-    setIsLoading(true);
+    dispatchFruits({ type: 'FRUITS_FETCH_INIT' });
 
     getAsyncStories()
       .then(result => {
         dispatchFruits({
-          type: 'SET_FRUITS',
+          type: 'FRUITS_FETCH_SUCCESS',
           payload: result.data.fruits
         });
-        setIsLoading(false);
       })
-      .catch(() => setIsError(true));
+      .catch(() =>
+        dispatchFruits({ type: 'FRUITS_FETCH_FAILURE' })
+      );
   }, []);
 
   const handleRemoveFruit = item => {
@@ -69,7 +91,7 @@ const App = () => {
     setSearchTerm(event.target.value)
   };
 
-  const filteredSearch = fruits.filter(fruit =>
+  const filteredSearch = fruits.data.filter(fruit =>
     fruit.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -86,10 +108,10 @@ const App = () => {
       </InputWithALabel>
 
       <hr />
-
-      {isError && <p>Something went wrong ...</p>}
-
-      {isLoading ? (
+      
+      {fruits.isError && <p>Something went wrong ...</p>}
+      
+      {fruits.isLoading ? (
         <p>Loading...</p>
       ) : (
         <List
