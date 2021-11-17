@@ -46,13 +46,15 @@ const fruitsReducer = (state, action) => {
 
 const App = () => {
 
+  const FRUITS_API_ENDPOINT = 'https://www.fruityvice.com/api/fruit/all'
+
   const initialFruits = [
     { id: 1, name: 'Apple', calories: 100, url: 'https://en.wikipedia.org/wiki/Apple' },
     { id: 2, name: 'Bananas', calories: 200, url: 'https://en.wikipedia.org/wiki/Banana' },
     { id: 3, name: 'Cherry', calories: 300, url: 'https://en.wikipedia.org/wiki/Cherry' }
   ];
 
-  const getAsyncStories = () =>
+  const getAsyncFruits = () =>
     new Promise(resolve =>
       setTimeout(
         () => resolve({ data: { fruits: initialFruits } }), 2000
@@ -68,11 +70,12 @@ const App = () => {
   React.useEffect(() => {
     dispatchFruits({ type: 'FRUITS_FETCH_INIT' });
 
-    getAsyncStories()
+    fetch(`${FRUITS_API_ENDPOINT}`)
+      .then(response => response.json())
       .then(result => {
         dispatchFruits({
           type: 'FRUITS_FETCH_SUCCESS',
-          payload: result.data.fruits
+          payload: result
         });
       })
       .catch(() =>
@@ -108,9 +111,9 @@ const App = () => {
       </InputWithALabel>
 
       <hr />
-      
+
       {fruits.isError && <p>Something went wrong ...</p>}
-      
+
       {fruits.isLoading ? (
         <p>Loading...</p>
       ) : (
@@ -138,7 +141,7 @@ const Item = ({ item, onRemoveItem }) => (
     <span>
       <a href={item.url}> {item.name} </a>
     </span>
-    <span>Calories: {item.calories} </span>
+    <span>Calories: {item.nutritions.calories} </span>
     <span>
       <button type="button" onClick={() => onRemoveItem(item)}>
         Remove
