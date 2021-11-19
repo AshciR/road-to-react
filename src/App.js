@@ -13,31 +13,31 @@ const useSemiPersistentState = (key, initialState) => {
   return [value, setValue];
 };
 
-const fruitsReducer = (state, action) => {
+const storiesReducer = (state, action) => {
   switch (action.type) {
-    case 'FRUITS_FETCH_INIT':
+    case 'STORIES_FETCH_INIT':
       return {
         ...state,
         isLoading: true,
         isError: false
       };
-    case 'FRUITS_FETCH_SUCCESS':
+    case 'STORIES_FETCH_SUCCESS':
       return {
         ...state,
         isLoading: false,
         isError: false,
         data: action.payload
       };
-    case 'FRUITS_FETCH_FAILURE':
+    case 'STORIES_FETCH_FAILURE':
       return {
         ...state,
         isLoading: false,
         isError: true
       };
-    case 'REMOVE_FRUIT':
+    case 'REMOVE_STORY':
       return {
         ...state,
-        data: state.data.filter(fruit => action.payload.id !== fruit.id)
+        data: state.data.filter(stories => action.payload.objectID !== stories.objectID)
       };
     default:
       throw new Error();
@@ -46,46 +46,33 @@ const fruitsReducer = (state, action) => {
 
 const App = () => {
 
-  const FRUITS_API_ENDPOINT = 'https://www.fruityvice.com/api/fruit/all'
-
-  const initialFruits = [
-    { id: 1, name: 'Apple', calories: 100, url: 'https://en.wikipedia.org/wiki/Apple' },
-    { id: 2, name: 'Bananas', calories: 200, url: 'https://en.wikipedia.org/wiki/Banana' },
-    { id: 3, name: 'Cherry', calories: 300, url: 'https://en.wikipedia.org/wiki/Cherry' }
-  ];
-
-  const getAsyncFruits = () =>
-    new Promise(resolve =>
-      setTimeout(
-        () => resolve({ data: { fruits: initialFruits } }), 2000
-      )
-    );
+  const STORIES_API_ENDPOINT = 'http://hn.algolia.com/api/v1/search?query='
 
   const [searchTerm, setSearchTerm] = useSemiPersistentState('search', '');
-  const [fruits, dispatchFruits] = React.useReducer(
-    fruitsReducer,
+  const [stories, dispatchStories] = React.useReducer(
+    storiesReducer,
     { data: [], isLoading: false, isError: false }
   );
 
   React.useEffect(() => {
-    dispatchFruits({ type: 'FRUITS_FETCH_INIT' });
+    dispatchStories({ type: 'STORIES_FETCH_INIT' });
 
-    fetch(`${FRUITS_API_ENDPOINT}`)
+    fetch(`${STORIES_API_ENDPOINT}react`)
       .then(response => response.json())
       .then(result => {
-        dispatchFruits({
-          type: 'FRUITS_FETCH_SUCCESS',
-          payload: result
+        dispatchStories({
+          type: 'STORIES_FETCH_SUCCESS',
+          payload: result.hits
         });
       })
       .catch(() =>
-        dispatchFruits({ type: 'FRUITS_FETCH_FAILURE' })
+        dispatchStories({ type: 'STORIES_FETCH_FAILURE' })
       );
   }, []);
 
-  const handleRemoveFruit = item => {
-    dispatchFruits({
-      type: 'REMOVE_FRUIT',
+  const handleRemoveStory = item => {
+    dispatchStories({
+      type: 'REMOVE_STORY',
       payload: item
     });
   };
@@ -94,13 +81,13 @@ const App = () => {
     setSearchTerm(event.target.value)
   };
 
-  const filteredSearch = fruits.data.filter(fruit =>
-    fruit.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredSearch = stories.data.filter(story =>
+    story.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div>
-      <h1>My Favorite Fruits</h1>
+      <h1>Hacker News Stories about React</h1>
 
       <InputWithALabel
         id="search"
@@ -112,14 +99,14 @@ const App = () => {
 
       <hr />
 
-      {fruits.isError && <p>Something went wrong ...</p>}
+      {stories.isError && <p>Something went wrong ...</p>}
 
-      {fruits.isLoading ? (
+      {stories.isLoading ? (
         <p>Loading...</p>
       ) : (
         <List
           list={filteredSearch}
-          onRemoveItem={handleRemoveFruit}
+          onRemoveItem={handleRemoveStory}
         />
       )}
 
@@ -129,7 +116,7 @@ const App = () => {
 
 const List = ({ list, onRemoveItem }) => list.map(item =>
   <Item
-    key={item.id}
+    key={item.objectID}
     item={item}
     onRemoveItem={onRemoveItem}
   />
@@ -137,11 +124,13 @@ const List = ({ list, onRemoveItem }) => list.map(item =>
 
 const Item = ({ item, onRemoveItem }) => (
   <div>
-    <span>Id: {item.id} </span>
+    <span>Id: {item.objectID} </span>
     <span>
-      <a href={item.url}> {item.name} </a>
+      <a href={item.url}> {item.title} </a>
     </span>
-    <span>Calories: {item.nutritions.calories} </span>
+    <span>Author: {item.author} </span>
+    <span>Number of comments: {item.num_comments} </span>
+    <span>Points: {item.points} </span>
     <span>
       <button type="button" onClick={() => onRemoveItem(item)}>
         Remove
@@ -149,7 +138,6 @@ const Item = ({ item, onRemoveItem }) => (
     </span>
   </div>
 );
-
 
 const InputWithALabel = ({ id, children, type = "text", value, onInputChange }) => (
 
