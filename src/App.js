@@ -86,7 +86,7 @@ const App = () => {
 
   return (
     <div>
-      <h1>Hacker News Stories about React</h1>
+      <h1>Hacker News Stories</h1>
 
       <InputWithALabel
         id="search"
