@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import './App.css';
 
 const useSemiPersistentState = (key, initialState) => {
@@ -48,7 +49,7 @@ const App = () => {
 
   const STORIES_API_ENDPOINT = 'http://hn.algolia.com/api/v1/search?query='
 
-  const [searchTerm, setSearchTerm] = useSemiPersistentState('search', '');
+  const [searchTerm, setSearchTerm] = useSemiPersistentState('search', 'React');
   const [stories, dispatchStories] = React.useReducer(
     storiesReducer,
     { data: [], isLoading: false, isError: false }
@@ -69,12 +70,12 @@ const App = () => {
 
     dispatchStories({ type: 'STORIES_FETCH_INIT' });
 
-    fetch(url)
-      .then(response => response.json())
+    axios
+      .get(url)
       .then(result => {
         dispatchStories({
           type: 'STORIES_FETCH_SUCCESS',
-          payload: result.hits
+          payload: result.data.hits
         });
       })
       .catch(() =>
