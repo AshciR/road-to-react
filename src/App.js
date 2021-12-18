@@ -95,8 +95,8 @@ const App = () => {
   };
 
   return (
-    <div>
-      <h1>Hacker News Stories</h1>
+    <div className='container'>
+      <h1 className='headline-primary'>Hacker News Stories</h1>
 
       <SearchForm
         searchTerm={searchTerm}
@@ -104,7 +104,6 @@ const App = () => {
         onSearchSubmit={handleSearchSubmit}
       />
 
-      <hr />
 
       {stories.isError && <p>Something went wrong ...</p>}
 
@@ -153,7 +152,7 @@ const List = ({ list, onRemoveItem }) => list.map(item =>
 );
 
 const Item = ({ item, onRemoveItem }) => (
-  <div>
+  <div className='item'>
     <span>Id: {item.objectID} </span>
     <span>
       <a href={item.url}> {item.title} </a>
