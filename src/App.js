@@ -126,7 +126,7 @@ const SearchForm = ({
   onSearchSubmit
 }) => (
 
-  <form onSubmit={onSearchSubmit}>
+  <form onSubmit={onSearchSubmit} className='search-form'>
     <InputWithALabel
       id="search"
       value={searchTerm}
@@ -136,7 +136,11 @@ const SearchForm = ({
       <strong>Search:</strong>
     </InputWithALabel>
 
-    <button type="submit" disabled={!searchTerm}>
+    <button
+      type="submit"
+      disabled={!searchTerm}
+      className='button button--large'
+    >
       Submit
     </button>
   </form>
@@ -161,7 +165,11 @@ const Item = ({ item, onRemoveItem }) => (
     <span>Number of comments: {item.num_comments} </span>
     <span>Points: {item.points} </span>
     <span>
-      <button type="button" onClick={() => onRemoveItem(item)}>
+      <button
+        type="button"
+        onClick={() => onRemoveItem(item)}
+        className='button button--small'
+      >
         Remove
       </button>
     </span>
@@ -171,13 +179,17 @@ const Item = ({ item, onRemoveItem }) => (
 const InputWithALabel = ({ id, children, type = "text", value, onInputChange }) => (
 
   <>
-    <label htmlFor={id}> {children} </label>
+    <label htmlFor={id} className="label">
+      {children}
+    </label>
     &nbsp;
     <input
       id={id}
       type={type}
       value={value}
-      onChange={onInputChange} />
+      onChange={onInputChange}
+      className='input'
+    />
   </>
 
 );
