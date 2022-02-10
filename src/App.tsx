@@ -19,7 +19,40 @@ const useSemiPersistentState = (
   return [value, setValue];
 };
 
-const storiesReducer = (state, action) => {
+type StoriesState = {
+  data: Stories;
+  isLoading: boolean;
+  isError: boolean;
+};
+
+interface StoriesFetchInitAction {
+  type: 'STORIES_FETCH_INIT';
+};
+
+interface StoriesFetchSuccessAction {
+  type: 'STORIES_FETCH_SUCCESS';
+  payload: Stories;
+};
+
+interface StoriesFetchFailureAction {
+  type: 'STORIES_FETCH_FAILURE';
+};
+
+interface StoriesRemoveAction {
+  type: 'REMOVE_STORY';
+  payload: Story;
+};
+
+type StoriesAction =
+  | StoriesFetchInitAction
+  | StoriesFetchSuccessAction
+  | StoriesFetchFailureAction
+  | StoriesRemoveAction
+
+const storiesReducer = (
+  state: StoriesState,
+  action: StoriesAction
+) => {
   switch (action.type) {
     case 'STORIES_FETCH_INIT':
       return {
@@ -92,7 +125,7 @@ const App = () => {
     handleFetchStories()
   }, [handleFetchStories]);
 
-  const handleRemoveStory = item => {
+  const handleRemoveStory = (item: Story) => {
     dispatchStories({
       type: 'REMOVE_STORY',
       payload: item
@@ -152,7 +185,6 @@ const SearchForm = ({
 
 );
 
-
 type Stories = Array<Story>;
 
 type Story = {
@@ -203,7 +235,7 @@ const Item = ({ item, onRemoveItem }: ItemProps) => (
   </div>
 );
 
-const InputWithALabel = ({ id, children, type = "text", value, onInputChange }) => (
+const InputWithALabel = ({ id, children, type = "text", value, onInputChange, isFocused }) => (
 
   <>
     <label htmlFor={id} className="label">
