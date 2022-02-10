@@ -3,7 +3,11 @@ import axios from 'axios';
 import './App.css';
 import { ReactComponent as Check } from './check.svg';
 
-const useSemiPersistentState = (key, initialState) => {
+const useSemiPersistentState = (
+  key: string,
+  initialState: string
+): [string, (newValue: string) => void] => {
+
   const [value, setValue] = React.useState(
     localStorage.getItem(key) || initialState
   );
@@ -148,7 +152,24 @@ const SearchForm = ({
 
 );
 
-const List = ({ list, onRemoveItem }) => list.map(item =>
+
+type Stories = Array<Story>;
+
+type Story = {
+  objectID: string;
+  url: string;
+  title: string;
+  author: string;
+  num_comments: number;
+  points: number;
+};
+
+type ListProps = {
+  list: Stories;
+  onRemoveItem: (item: Story) => void;
+};
+
+const List = ({ list, onRemoveItem }: ListProps) => list.map(item =>
   <Item
     key={item.objectID}
     item={item}
@@ -156,7 +177,12 @@ const List = ({ list, onRemoveItem }) => list.map(item =>
   />
 );
 
-const Item = ({ item, onRemoveItem }) => (
+type ItemProps = {
+  item: Story;
+  onRemoveItem: (item: Story) => void;
+};
+
+const Item = ({ item, onRemoveItem }: ItemProps) => (
   <div className='item'>
     <span>Id: {item.objectID} </span>
     <span>
