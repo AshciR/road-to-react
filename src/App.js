@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import './App.css';
+import { ReactComponent as Check } from './check.svg';
 
 const useSemiPersistentState = (key, initialState) => {
   const [value, setValue] = React.useState(
@@ -170,7 +171,7 @@ const Item = ({ item, onRemoveItem }) => (
         onClick={() => onRemoveItem(item)}
         className='button button--small'
       >
-        Remove
+        <Check height="18px" width="18px" />
       </button>
     </span>
   </div>

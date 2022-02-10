@@ -46,6 +46,11 @@
   color: #ffffff;
 }
 
+.button:hover>svg>g {
+  fill: #ffffff;
+  stroke: #ffffff;
+}
+
 .button--small {
   padding: 5px;
 }
