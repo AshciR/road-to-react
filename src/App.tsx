@@ -3,7 +3,12 @@ import axios from 'axios';
 import './App.css';
 import { ReactComponent as Check } from './check.svg';
 
-const useSemiPersistentState = (key, initialState) => {
+
+const useSemiPersistentState = (
+  key: string,
+  initialState: string
+): [string, (newValue: string) => void] => {
+
   const [value, setValue] = React.useState(
     localStorage.getItem(key) || initialState
   );
@@ -15,7 +20,40 @@ const useSemiPersistentState = (key, initialState) => {
   return [value, setValue];
 };
 
-const storiesReducer = (state, action) => {
+type StoriesState = {
+  data: Stories;
+  isLoading: boolean;
+  isError: boolean;
+};
+
+interface StoriesFetchInitAction {
+  type: 'STORIES_FETCH_INIT';
+};
+
+interface StoriesFetchSuccessAction {
+  type: 'STORIES_FETCH_SUCCESS';
+  payload: Stories;
+};
+
+interface StoriesFetchFailureAction {
+  type: 'STORIES_FETCH_FAILURE';
+};
+
+interface StoriesRemoveAction {
+  type: 'REMOVE_STORY';
+  payload: Story;
+};
+
+type StoriesAction =
+  | StoriesFetchInitAction
+  | StoriesFetchSuccessAction
+  | StoriesFetchFailureAction
+  | StoriesRemoveAction
+
+const storiesReducer = (
+  state: StoriesState,
+  action: StoriesAction
+) => {
   switch (action.type) {
     case 'STORIES_FETCH_INIT':
       return {
@@ -57,13 +95,12 @@ const App = () => {
   );
   const [url, setUrl] = React.useState(`${STORIES_API_ENDPOINT}${searchTerm}`);
 
-  const handleSearchInput = event => {
+  const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value)
   };
 
-  const handleSearchSubmit = event => {
+  const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     setUrl(`${STORIES_API_ENDPOINT}${searchTerm}`)
-
     event.preventDefault();
   }
 
@@ -88,7 +125,7 @@ const App = () => {
     handleFetchStories()
   }, [handleFetchStories]);
 
-  const handleRemoveStory = item => {
+  const handleRemoveStory = (item: Story) => {
     dispatchStories({
       type: 'REMOVE_STORY',
       payload: item
@@ -121,17 +158,22 @@ const App = () => {
   );
 };
 
+type SearchFormProps = {
+  searchTerm: string;
+  onSearchInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onSearchSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+};
+
 const SearchForm = ({
   searchTerm,
   onSearchInput,
   onSearchSubmit
-}) => (
+}: SearchFormProps) => (
 
   <form onSubmit={onSearchSubmit} className='search-form'>
     <InputWithALabel
       id="search"
       value={searchTerm}
-      isFocused
       onInputChange={onSearchInput}
     >
       <strong>Search:</strong>
@@ -148,15 +190,40 @@ const SearchForm = ({
 
 );
 
-const List = ({ list, onRemoveItem }) => list.map(item =>
-  <Item
-    key={item.objectID}
-    item={item}
-    onRemoveItem={onRemoveItem}
-  />
+type Stories = Array<Story>;
+
+type Story = {
+  objectID: string;
+  url: string;
+  title: string;
+  author: string;
+  num_comments: number;
+  points: number;
+};
+
+type ListProps = {
+  list: Stories;
+  onRemoveItem: (item: Story) => void;
+};
+
+const List = ({ list, onRemoveItem }: ListProps) => (
+  <>
+    {list.map(item => (
+      <Item
+        key={item.objectID}
+        item={item}
+        onRemoveItem={onRemoveItem}
+      />
+    ))}
+  </>
 );
 
-const Item = ({ item, onRemoveItem }) => (
+type ItemProps = {
+  item: Story;
+  onRemoveItem: (item: Story) => void;
+};
+
+const Item = ({ item, onRemoveItem }: ItemProps) => (
   <div className='item'>
     <span>Id: {item.objectID} </span>
     <span>
@@ -177,7 +244,21 @@ const Item = ({ item, onRemoveItem }) => (
   </div>
 );
 
-const InputWithALabel = ({ id, children, type = "text", value, onInputChange }) => (
+type InputWithALabelProps = {
+  id: string;
+  value: string;
+  type?: string;
+  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  children: React.ReactNode;
+};
+
+const InputWithALabel = ({
+  id,
+  children,
+  type = "text",
+  value,
+  onInputChange,
+}: InputWithALabelProps) => (
 
   <>
     <label htmlFor={id} className="label">
