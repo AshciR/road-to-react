@@ -3,6 +3,7 @@ import axios from 'axios';
 import './App.css';
 import { ReactComponent as Check } from './check.svg';
 
+
 const useSemiPersistentState = (
   key: string,
   initialState: string
@@ -94,13 +95,12 @@ const App = () => {
   );
   const [url, setUrl] = React.useState(`${STORIES_API_ENDPOINT}${searchTerm}`);
 
-  const handleSearchInput = event => {
+  const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value)
   };
 
-  const handleSearchSubmit = event => {
+  const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     setUrl(`${STORIES_API_ENDPOINT}${searchTerm}`)
-
     event.preventDefault();
   }
 
@@ -158,17 +158,22 @@ const App = () => {
   );
 };
 
+type SearchFormProps = {
+  searchTerm: string;
+  onSearchInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onSearchSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+};
+
 const SearchForm = ({
   searchTerm,
   onSearchInput,
   onSearchSubmit
-}) => (
+}: SearchFormProps) => (
 
   <form onSubmit={onSearchSubmit} className='search-form'>
     <InputWithALabel
       id="search"
       value={searchTerm}
-      isFocused
       onInputChange={onSearchInput}
     >
       <strong>Search:</strong>
@@ -201,12 +206,16 @@ type ListProps = {
   onRemoveItem: (item: Story) => void;
 };
 
-const List = ({ list, onRemoveItem }: ListProps) => list.map(item =>
-  <Item
-    key={item.objectID}
-    item={item}
-    onRemoveItem={onRemoveItem}
-  />
+const List = ({ list, onRemoveItem }: ListProps) => (
+  <>
+    {list.map(item => (
+      <Item
+        key={item.objectID}
+        item={item}
+        onRemoveItem={onRemoveItem}
+      />
+    ))}
+  </>
 );
 
 type ItemProps = {
@@ -235,7 +244,21 @@ const Item = ({ item, onRemoveItem }: ItemProps) => (
   </div>
 );
 
-const InputWithALabel = ({ id, children, type = "text", value, onInputChange, isFocused }) => (
+type InputWithALabelProps = {
+  id: string;
+  value: string;
+  type?: string;
+  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  children: React.ReactNode;
+};
+
+const InputWithALabel = ({
+  id,
+  children,
+  type = "text",
+  value,
+  onInputChange,
+}: InputWithALabelProps) => (
 
   <>
     <label htmlFor={id} className="label">
