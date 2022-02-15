@@ -277,3 +277,5 @@ const InputWithALabel = ({
 );
 
 export default App;
+
+export {storiesReducer, SearchForm, InputWithALabel, List, Item};
