@@ -214,5 +214,4 @@ describe('SearchForm', () => {
     expect(searchFormProps.onSearchSubmit).toHaveBeenCalledTimes(1);
   });
 
-
 });
