@@ -1,3 +1,4 @@
+import React from 'react';
 import App, {
   storiesReducer,
   Item,
@@ -5,6 +6,12 @@ import App, {
   SearchForm,
   InputWithALabel
 } from './App';
+import {
+  render,
+  screen,
+  fireEvent,
+  act
+} from '@testing-library/react';
 
 const initialState = {
   data: [],
@@ -98,7 +105,7 @@ describe('storiesReducer', () => {
 
     // Given: We have a current state and an action
     const state = initialState
-    const action = { type: 'STORIES_FETCH_FAILURE'};
+    const action = { type: 'STORIES_FETCH_FAILURE' };
 
     // When: We call the reducer
     const updatedState = storiesReducer(state, action);
@@ -113,5 +120,99 @@ describe('storiesReducer', () => {
     expect(updatedState).toStrictEqual(expectedState);
 
   });
+
+});
+
+describe('Item component', () => {
+
+  test('renders all properties', () => {
+
+    // When: the component is rendered
+    render(<Item item={storyOne} />);
+
+    // Then: the dom should have the following elements 
+    expect(screen.getByText('Author: Richie')).toBeInTheDocument();
+    expect(screen.getByText('React')).toHaveAttribute('href', "https://reactjs.org/");
+
+  });
+
+  test('renders a clickable remove button', () => {
+
+    // When: the component is rendered
+    render(<Item item={storyOne} />);
+
+    // Then: the dom should have the following elements 
+    expect(screen.getByRole('button')).toBeInTheDocument();
+
+  });
+
+  test('clicking the remove button calls the callback handler', () => {
+
+    // Given: the component is rendered
+    const handleRemoveItem = jest.fn();
+    render(<Item item={storyOne} onRemoveItem={handleRemoveItem} />);
+
+    // When: the button is clicked
+    fireEvent.click(screen.getByRole('button'));
+
+    // Then: the dom should have the following elements 
+    expect(handleRemoveItem).toHaveBeenCalledTimes(1);
+
+  });
+
+});
+
+describe('SearchForm', () => {
+
+  const searchFormProps = {
+    searchTerm: 'React',
+    onSearchInput: jest.fn(),
+    onSearchSubmit: jest.fn()
+  };
+
+  test('renders the input field with its value', () => {
+
+    // When: we render the component
+    render(<SearchForm {...searchFormProps} />);
+
+    // Then: the component is rendered correctly
+    expect(screen.getByDisplayValue('React')).toBeInTheDocument();
+  });
+
+  test('renders the correct label', () => {
+
+    // When: we render the component
+    render(<SearchForm {...searchFormProps} />);
+
+    // Then: the component is rendered correctly
+    expect(screen.getByLabelText(/Search/)).toBeInTheDocument();
+  });
+
+  test('calls onSearchInput on input field change', () => {
+
+    // Given: we render the component
+    render(<SearchForm {...searchFormProps} />);
+
+    // When: we change the input field
+    fireEvent.change(screen.getByDisplayValue('React'), {
+      target: { value: 'Redux' }
+    });
+
+    // Then: the component is rendered correctly
+    expect(searchFormProps.onSearchInput).toHaveBeenCalledTimes(1);
+  });
+
+  test('calls onSearchSubmit on button submit click', () => {
+
+    // Given: we render the component
+    render(<SearchForm {...searchFormProps} />);
+
+    // When: we change the input field
+    fireEvent.submit(screen.getByRole('button'));
+
+    // Then: the component is rendered correctly
+    expect(searchFormProps.onSearchSubmit).toHaveBeenCalledTimes(1);
+  });
+
 
 });
