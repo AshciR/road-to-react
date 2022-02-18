@@ -183,6 +183,7 @@ const SearchForm = ({
       type="submit"
       disabled={!searchTerm}
       className='button button--large'
+      data-testid='submit-button'
     >
       Submit
     </button>
@@ -238,7 +239,11 @@ const Item = ({ item, onRemoveItem }: ItemProps) => (
         onClick={() => onRemoveItem(item)}
         className='button button--small'
       >
-        <Check height="18px" width="18px" />
+        <Check
+          height="18px"
+          width="18px"
+          data-testid='dimiss-check-box'
+        />
       </button>
     </span>
   </div>
@@ -271,6 +276,7 @@ const InputWithALabel = ({
       value={value}
       onChange={onInputChange}
       className='input'
+      data-testid='search-input'
     />
   </>
 
@@ -278,4 +284,4 @@ const InputWithALabel = ({
 
 export default App;
 
-export {storiesReducer, SearchForm, InputWithALabel, List, Item};
+export { storiesReducer, SearchForm, InputWithALabel, List, Item };
