@@ -6,6 +6,7 @@ exports[`SearchForm renders snapshop 1`] = `
 >
   <label
     class="label"
+    data-testid="label"
     for="search"
   >
     <strong>
