@@ -1,8 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 import './App.css';
-import { ReactComponent as Check } from './check.svg';
-
+import List from './List';
+import SearchForm from './SearchForm';
+import { Stories, Story } from './Story';
 
 const useSemiPersistentState = (
   key: string,
@@ -158,130 +159,6 @@ const App = () => {
   );
 };
 
-type SearchFormProps = {
-  searchTerm: string;
-  onSearchInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onSearchSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-};
-
-const SearchForm = ({
-  searchTerm,
-  onSearchInput,
-  onSearchSubmit
-}: SearchFormProps) => (
-
-  <form onSubmit={onSearchSubmit} className='search-form'>
-    <InputWithALabel
-      id="search"
-      value={searchTerm}
-      onInputChange={onSearchInput}
-    >
-      <strong>Search:</strong>
-    </InputWithALabel>
-
-    <button
-      type="submit"
-      disabled={!searchTerm}
-      className='button button--large'
-      data-testid='submit-button'
-    >
-      Submit
-    </button>
-  </form>
-
-);
-
-type Stories = Array<Story>;
-
-type Story = {
-  objectID: string;
-  url: string;
-  title: string;
-  author: string;
-  num_comments: number;
-  points: number;
-};
-
-type ListProps = {
-  list: Stories;
-  onRemoveItem: (item: Story) => void;
-};
-
-const List = ({ list, onRemoveItem }: ListProps) => (
-  <>
-    {list.map(item => (
-      <Item
-        key={item.objectID}
-        item={item}
-        onRemoveItem={onRemoveItem}
-      />
-    ))}
-  </>
-);
-
-type ItemProps = {
-  item: Story;
-  onRemoveItem: (item: Story) => void;
-};
-
-const Item = ({ item, onRemoveItem }: ItemProps) => (
-  <div className='item'>
-    <span>Id: {item.objectID} </span>
-    <span>
-      <a href={item.url}> {item.title} </a>
-    </span>
-    <span>Author: {item.author} </span>
-    <span>Number of comments: {item.num_comments} </span>
-    <span>Points: {item.points} </span>
-    <span>
-      <button
-        type="button"
-        onClick={() => onRemoveItem(item)}
-        className='button button--small'
-      >
-        <Check
-          height="18px"
-          width="18px"
-          data-testid='dimiss-check-box'
-        />
-      </button>
-    </span>
-  </div>
-);
-
-type InputWithALabelProps = {
-  id: string;
-  value: string;
-  type?: string;
-  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  children: React.ReactNode;
-};
-
-const InputWithALabel = ({
-  id,
-  children,
-  type = "text",
-  value,
-  onInputChange,
-}: InputWithALabelProps) => (
-
-  <>
-    <label htmlFor={id} className="label">
-      {children}
-    </label>
-    &nbsp;
-    <input
-      id={id}
-      type={type}
-      value={value}
-      onChange={onInputChange}
-      className='input'
-      data-testid='search-input'
-    />
-  </>
-
-);
-
 export default App;
 
-export { storiesReducer, SearchForm, InputWithALabel, List, Item };
+export { storiesReducer };
