@@ -1,5 +1,6 @@
 import React from "react";
-import InputWithALabel from "./InputWithALabel";
+import InputWithALabel from "../InputWithALabel/InputWithALabel";
+import './SearchForm.css'
 
 type SearchFormProps = {
     searchTerm: string;

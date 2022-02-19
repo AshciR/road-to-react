@@ -1,9 +1,10 @@
 import React from 'react';
 import axios from 'axios';
 import './App.css';
-import List from './List';
-import SearchForm from './SearchForm';
+
+import SearchForm from './SearchForm/SearchForm';
 import { Stories, Story } from './Story';
+import List from './List/List';
 
 const useSemiPersistentState = (
   key: string,

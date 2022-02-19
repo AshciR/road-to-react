@@ -1,7 +1,8 @@
 
 import React from 'react';
 import { ReactComponent as Check } from './check.svg';
-import { Stories, Story } from './Story';
+import { Stories, Story } from '../Story';
+import './List.css';
 
 type ListProps = {
     list: Stories;
@@ -53,3 +54,4 @@ const Item = ({ item, onRemoveItem }: ItemProps) => (
 );
 
 export default List;
+export { Item };

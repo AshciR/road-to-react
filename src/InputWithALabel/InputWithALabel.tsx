@@ -1,4 +1,5 @@
 import React from "react";
+import './InputWithALabel.css'
 
 type InputWithALabelProps = {
     id: string;
@@ -17,7 +18,11 @@ const InputWithALabel = ({
 }: InputWithALabelProps) => (
 
     <>
-        <label htmlFor={id} className="label">
+        <label
+            htmlFor={id}
+            className="label"
+            data-testid="label"
+        >
             {children}
         </label>
         &nbsp;
