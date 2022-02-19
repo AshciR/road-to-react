@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchForm renders snapshop 1`] = `
+<form
+  class="search-form"
+>
+  <label
+    class="label"
+    for="search"
+  >
+    <strong>
+      Search:
+    </strong>
+  </label>
+   
+  <input
+    class="input"
+    data-testid="search-input"
+    id="search"
+    type="text"
+    value="React"
+  />
+  <button
+    class="button button--large"
+    data-testid="submit-button"
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;

@@ -217,6 +217,17 @@ describe('SearchForm', () => {
     expect(searchFormProps.onSearchSubmit).toHaveBeenCalledTimes(1);
   });
 
+  test('renders snapshop', () => {
+
+    // When: we render the component
+    const { container } = render(<SearchForm {...searchFormProps} />);
+
+    // Then: we expect the HTML structure not to have changed
+    expect(container.firstChild).toMatchSnapshot();
+
+
+  });
+
 });
 
 describe('App', () => {
@@ -323,17 +334,17 @@ describe('App', () => {
     render(<App />);
     await act(() => reactStoriesPromise);
 
-    
+
     // When: We search for a specific story
     fireEvent.change(screen.queryByTestId('search-input'), {
       target: {
         value: 'Google'
       }
     });
-    
+
     fireEvent.submit(screen.getByTestId('submit-button'));
-    await act (() => getGoogleStoriesPromise());
-    
+    await act(() => getGoogleStoriesPromise());
+
     // Then: The new story appears on the page
     expect(screen.getByText('Google Careers')).toBeInTheDocument();
 
